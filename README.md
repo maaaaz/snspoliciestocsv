@@ -10,7 +10,7 @@ Options
 ```
 $ python3 snspoliciestocsv.py -h
 Usage: snspoliciestocsv.py [options]
-Version: 1.0
+Version: 1.11
 
 Options:
   -h, --help            show this help message and exit
@@ -35,24 +35,28 @@ separator color="000000" comment="Allow VPN A to B" collapse="1"
 pass inspection firewall log ipproto vpn-esp proto none from A to B	# Créée le 1970-01-01 00:00:01, par Serge (1.2.3.4)
 separator color="000000" comment="Block B to C" collapse="1"
 block from B to C port ssh	# Prenez un chewing-gum EmileCréée le 1970-01-01 00:00:02, par Odile (1.2.3.5)
+block from A to G port ssh	# àloléCréée le 1970-01-01 00:00:02, par Léon (1.2.3.5)
 ```
 
 #### policies-out.csv
 ```
-type;from;to;ipproto;proto;port;comment;creation_date;user;ip_user
-Allow VPN A to B;;;;;;;;;
-pass;A;B;vpn-esp;none;; ;1970-01-01 00:00:01;Serge;1.2.3.4
-Block B to C;;;;;;;;;
-block;B;C;;;ssh; Prenez un chewing-gum Emile;1970-01-01 00:00:02;Odile;1.2.3.5
+type;log;from;to;ipproto;proto;port;comment;creation_date;user;ip_user
+Allow VPN A to B;;;;;;;;;;
+pass;log;A;B;vpn-esp;none;; ;1970-01-01 00:00:01;Serge;1.2.3.4
+Block B to C;;;;;;;;;;
+block;;B;C;;;ssh; Prenez un chewing-gum Emile;1970-01-01 00:00:02;Odile;1.2.3.5
+block;;A;G;;;ssh; àlolé;1970-01-01 00:00:02;Léon;1.2.3.5
 ```
 
 Dependencies and installation
 -----------------------------
+* Python 3 or superior (sorry but Python 2 is a pain with csv unicode stuff)
 * The **easiest way** to setup everything: `pip install snspoliciestocsv` and then directly use `$ snspoliciestocsv`
 * Or git clone that repository
 
 Changelog
 ---------
+* version 1.11 - 07/22/2017: Fixing some utf-8 issues, and adding the log column
 * version 1.0 - 07/14/2017: Initial commit
 
 Disclaimer and license

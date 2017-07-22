@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8-sig -*-
 
 # This file is part of snspoliciestocsv.
 #
@@ -19,7 +19,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with snspoliciestocsv.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 from codecs import open
 from os import path 
 import sys
@@ -28,7 +27,7 @@ import csv
 import os
 
 # Script version
-VERSION = '1.0'
+VERSION = '1.11'
 
 # OptionParser imports
 from optparse import OptionParser
@@ -95,7 +94,7 @@ def parse(options):
 
     # -- pass policy
     p_pass_line = re.compile('^pass')
-    p_pass_log = re.compile('(log)', re.IGNORECASE)
+    p_pass_log = re.compile('(?P<log>log)', re.IGNORECASE)
     p_pass_ipproto = re.compile('ipproto (?P<ipproto>.*) proto', re.IGNORECASE)
     p_pass_proto = re.compile('\sproto (?P<proto>.*) from', re.IGNORECASE)
     
@@ -112,7 +111,7 @@ def parse(options):
     policy_elem = {}
     policy_count = 0
     
-    with open(options.input_file,'r') as fd_input:
+    with open(options.input_file, mode='r', encoding='utf-8') as fd_input:
         for line in fd_input:
             line = line.lstrip().rstrip().strip()
             
@@ -138,7 +137,6 @@ def parse(options):
                 policy_list.append(policy_elem)
                 policy_elem = {}
                 
-    #pprint.pprint(policy_list)
     print('[+] %s filtering policies found' % policy_count)
     return policy_list
 
@@ -150,10 +148,10 @@ def generate_csv(results, options):
         @param results : parsed policies
         @param options : options
     """
-    keys = ['type', 'from', 'to', 'ipproto', 'proto', 'port', 'comment', 'creation_date', 'user', 'ip_user']
+    keys = ['type', 'log', 'from', 'to', 'ipproto', 'proto', 'port', 'comment', 'creation_date', 'user', 'ip_user']
     
     if results:
-        with open(options.output_file,'w') as fd_output:
+        with open(options.output_file, mode='w', encoding='utf-8-sig') as fd_output:
             spamwriter = csv.writer(fd_output, delimiter=options.delimiter)
             
             if not(options.skip_header):
@@ -189,11 +187,15 @@ def main():
     
     options, arguments = parser.parse_args()
     
+    # Python 2 is a pain with utf-8, sorry but use Python 3
+    if sys.version_info[0] < 3:
+        parser.error('Sorry but this program is not compatible with Python 2, please use Python 3')
+    
     print('snspoliciestocsv.py version %s\n' % VERSION)
     
     if (options.input_file == None):
         parser.error('Please specify a valid input file')
-                
+          
     results = parse(options)
     generate_csv(results, options)
     
