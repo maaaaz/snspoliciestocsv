@@ -56,6 +56,7 @@ Dependencies and installation
 
 Changelog
 ---------
+* version 1.12 - 08/13/2018: Fixing the README layout on PyPI
 * version 1.11 - 07/22/2017: Fixing some utf-8 issues, and adding the log column
 * version 1.0 - 07/14/2017: Initial commit
 
